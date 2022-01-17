@@ -4,7 +4,7 @@ public class Main {
 
     public static void main(String args[]) throws IOException {
         //Pfad zu Eingabefile
-        String path = System.getProperty("user.dir")+"/src/ch/kbw/ag/input";
+        String path = System.getProperty("user.dir")+"/src/ch/kbw/ag/input.txt";
         System.out.println(path);
         String s1 = readFile(path, "UTF-8");
         System.out.println("Orginal: "+s1);
