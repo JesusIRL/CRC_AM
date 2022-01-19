@@ -1,73 +1,88 @@
 package ch.kbw.ag;
 
+import java.io.*;
+import java.util.Scanner;
+
 public class Main {
 
     public static void main(String args[]) throws IOException {
-        //Pfad zu Eingabefile
-        String path = System.getProperty("user.dir")+"/src/ch/kbw/ag/input.txt";
-        System.out.println(path);
+        //Pfad zur Eingabedatei für Dateneingabe
+        String path = System.getProperty("user.dir") + "/src/ch/kbw/ag/input.txt";
         String s1 = readFile(path, "UTF-8");
-        System.out.println("Orginal: "+s1);
-        //Umwandlung des Strings in das Binärsystem
+        System.out.println("Orginal: " + s1);
+        //Dateneingabe in Bytes umwandeln
         byte[] bytes = s1.getBytes("UTF-8");
-        //Binary Array zurrück zu String umwandeln
-        String byteString = convertToBinaryString(bytes);
+        //Bytes als Binary String umwandeln
+        String binaryString = convertToBinaryString(bytes);
+        System.out.println(binaryString);
 
-        System.out.println(byteString);
-
-        // create scanner class object to take input from user
-        // Scanner erstellt für Userinput
-        Scanner scan = new Scanner(System.in);
-
-        //Arraygroesse für die Nachricht
-        int size= byteString.length();
-
-        int data[] = new int[size];
-        //Bytestring übergibt bitcode dem Dataarray
-        for (int i = 0; i < size; i++){
-            data[i] = byteString.charAt(i) - '0';
+        //Daten Array erstellen mit Grösse des Binary String
+        int size = binaryString.length();
+        int daten[] = new int[size];
+        //Binary String übergibt Bits dem Daten Array
+        for (int i = 0; i < size; i++) {
+            daten[i] = binaryString.charAt(i) - '0';
         }
 
-        // Groesse des Divisor vom Benutzer erfassen
-        System.out.println("Enter the size of the divisor array:");
+        //Scanner erstellen, um die Eingaben vom Benutzer entgegenzunehmen
+        Scanner scan = new Scanner(System.in);
+        //Groesse des Divisors vom Benutzer erfassen
+        System.out.println("Geben Sie die Anzahl Bits des Divisors an:");
         size = scan.nextInt();
         int divisor[] = new int[size];
-        //Divisor bits vom benutzer erfassen
-        System.out.println("Enter divisor bits in the array one by one: ");
-        for(int i = 0 ; i < size ; i++) {
-            System.out.println("Enter bit " + (size-i) + ":");
+        //Bits des Divisors vom Benutzer erfassen
+        System.out.println("Geben Sie die Bits des Divisors nacheinander ein:");
+        for (int i = 0; i < size; i++) {
+            System.out.println("Enter bit " + (size - i) + ":");
             divisor[i] = scan.nextInt();
         }
-        // Den data Array mit dem Divisor Array dividieren und das Resultat im rem Array speichern
-        int rem[] = divideDataWithDivisor(data, divisor);
-        // Rest rem in der Konsole ausgeben
-        for(int i = 0; i < rem.length-1; i++) {
-            System.out.print(rem[i]);
+        //Daten Array mit dem Divisor Array dividieren und das Resultat im Array speichern
+        int res[] = dividiereDatenMitDivisor(daten, divisor);
+        //Resultat in der Konsole ausgeben
+        for (int i = 0; i < res.length - 1; i++) {
+            System.out.print(res[i]);
         }
 
-        //CRC Code Ausgeben
-        System.out.println("\nGenerated CRC code is: ");
+        //CRC Code ausgeben
+        System.out.println("\nGenerierter CRC code ist: ");
 
-        for(int i = 0; i < data.length; i++) {
-            System.out.print(data[i]);
+        for (int i = 0; i < daten.length; i++) {
+            System.out.print(daten[i]);
         }
-        for(int i = 0; i < rem.length-1; i++) {
-            System.out.print(rem[i]);
+        for (int i = 0; i < res.length - 1; i++) {
+            System.out.print(res[i]);
         }
         System.out.println();
-
-        // Die Nachricht, welche beim Empfaenger angkommt vom Benutzer in der Konsole einlesen
-        int sentData[] = new int[data.length + rem.length - 1];
-        System.out.println("Enter bits in the array which you want to send: ");
-        for(int i = 0; i < sentData.length; i++) {
-            System.out.println("Enter bit " +(sentData.length - 1)+ ":");
-            sentData[i] = scan.nextInt();
+        System.out.println("Möchtest du das CRC korrekt beim empfänger ankommen lassen? [y/N]");
+        String antwort = scan.next();
+        System.out.println(antwort);
+        if(antwort.equals("y")){
+            int counter = 0;
+            int gesendeteDaten[] = new int[daten.length + res.length - 1];
+            for (int i = 0; i < daten.length; i++) {
+                gesendeteDaten[counter] = daten[i];
+                counter++;
+            }
+            for (int i = 0; i < res.length - 1; i++) {
+                gesendeteDaten[counter] = res[i];
+                counter++;
+            }
+            erhaltenDaten(gesendeteDaten, divisor);
+        }else{
+            // Die Nachricht, welche beim Empfaenger angkommt vom Benutzer in der Konsole einlesen
+            int gesendeteDaten[] = new int[daten.length + res.length - 1];
+            System.out.println("Geben Sie die Bits in das Feld ein, die Sie senden möchten: ");
+            for (int i = 0; i < gesendeteDaten.length; i++) {
+                System.out.println("Gib Bit ein " + (gesendeteDaten.length - 1) + ":");
+                gesendeteDaten[i] = scan.nextInt();
+            }
+            erhaltenDaten(gesendeteDaten, divisor);
         }
-        receiveData(sentData, divisor);
+
+
     }
 
-
-
+    //Bytes in Binary String umwandeln
     static String convertToBinaryString(byte[] bytes) throws UnsupportedEncodingException {
 
         StringBuffer buffer = new StringBuffer();
@@ -78,77 +93,74 @@ public class Main {
         return buffer.toString();
 
     }
+
+    //Eingabedatei lesen
     static String readFile(String filePath, String encoding) throws IOException {
         File file = new File(filePath);
         StringBuffer buffer = new StringBuffer();
         try (InputStreamReader isr = new InputStreamReader(new FileInputStream(file), encoding)) {
-            int data;
-            while ((data = isr.read()) != -1) {
-                buffer.append((char) data);
+            int daten;
+            while ((daten = isr.read()) != -1) {
+                buffer.append((char) daten);
             }
         }
         return buffer.toString();
     }
 
 
-
-
-
     // CRC code mit dem CRC verfahren ausrechnen
-    static int[] divideDataWithDivisor(int oldData[], int divisor[]) {
-        // rem[] array deklariernen in dem der Rest gespeichert wird
-        int rem[] = new int[divisor.length];
+    static int[] dividiereDatenMitDivisor(int alteDaten[], int divisor[]) {
+        // res[] array deklariernen in dem der Rest gespeichert wird
+        int res[] = new int[divisor.length];
         int i;
-        int data[] = new int[oldData.length + divisor.length];
-        // mit System.arraycopy() daten in rem und data Array kopieren
-        System.arraycopy(oldData, 0, data, 0, oldData.length);
-        System.arraycopy(data, 0, rem, 0, divisor.length);
-        // oldData iterieren und mit exor die bits und den Divisor verrechenen
-        for(i = 0; i < oldData.length; i++) {
-            System.out.println((i+1) + ".) First data bit is : "+ rem[0]);
-            System.out.print("Remainder : ");
-            if(rem[0] == 1) {
+        int daten[] = new int[alteDaten.length + divisor.length];
+        // mit System.arraycopy() Daten in res und daten Array kopieren
+        System.arraycopy(alteDaten, 0, daten, 0, alteDaten.length);
+        System.arraycopy(daten, 0, res, 0, divisor.length);
+        // alteDaten iterieren und mit exor die bits und den Divisor verrechenen
+        for (i = 0; i < alteDaten.length; i++) {
+            System.out.println((i + 1) + ".) Erstes Daten Bit ist : " + res[0]);
+            System.out.print("Rest : ");
+            if (res[0] == 1) {
                 // Mit exor Rest und Divisor verrechnen
-                for(int j = 1; j < divisor.length; j++) {
-                    rem[j-1] = exorOperation(rem[j], divisor[j]);
-                    System.out.print(rem[j-1]);
+                for (int j = 1; j < divisor.length; j++) {
+                    res[j - 1] = exorOperation(res[j], divisor[j]);
+                    System.out.print(res[j - 1]);
+                }
+            } else {
+                // Die Rest Bits mit 0 mit der exorOperation verrechnen
+                for (int j = 1; j < divisor.length; j++) {
+                    res[j - 1] = exorOperation(res[j], 0);
+                    System.out.print(res[j - 1]);
                 }
             }
-            else {
-                // We have to exor the remainder bits with 0
-                // Die Rest bits mit 0 mit der exorOperation verrechnen
-                for(int j = 1; j < divisor.length; j++) {
-                    rem[j-1] = exorOperation(rem[j], 0);
-                    System.out.print(rem[j-1]);
-                }
-            }
-            // Der letzte bit des Restes wird vom data geholt
-            rem[divisor.length-1] = data[i+divisor.length];
-            System.out.println(rem[divisor.length-1]);
+            // Der letzte bit des Restes wird von Daten geholt
+            res[divisor.length - 1] = daten[i + divisor.length];
+            System.out.println(res[divisor.length - 1]);
         }
-        return rem;
+        return res;
     }
-    // exorOperation() erstellen
+
+    //exorOperation() erstellen
     static int exorOperation(int x, int y) {
-        // Exor
-        if(x == y) {
+        //Exor
+        if (x == y) {
             return 0;
         }
         return 1;
     }
-    // method to print received data
-    // erhaltene Daten Aus
-    static void receiveData(int data[], int divisor[]) {
 
-        int rem[] = divideDataWithDivisor(data, divisor);
-        // Division is done
-        for(int i = 0; i < rem.length; i++) {
-            if(rem[i] != 0) {
-                // if the remainder is not equal to zero, data is currupted
-                System.out.println("Currupted data received...");
+    // Methode um erhaltene Daten auszugeben
+    static void erhaltenDaten(int daten[], int divisor[]) {
+
+        int res[] = dividiereDatenMitDivisor(daten, divisor);
+        //Division ist fertig
+        for (int i = 0; i < res.length; i++) {
+            if (res[i] != 0) {
+                System.out.println("Korrupte Daten bekommen");
                 return;
             }
         }
-        System.out.println("Data received without any error.");
+        System.out.println("Daten bekommen ohne Fehler.");
     }
 }
