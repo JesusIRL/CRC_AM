@@ -27,7 +27,7 @@ public class Main {
         //Scanner erstellen, um die Eingaben vom Benutzer entgegenzunehmen
         Scanner scan = new Scanner(System.in);
         //Groesse des Divisors vom Benutzer erfassen
-        System.out.println("Geben Sie die Anzahl Bits des Divisors an:");
+        System.out.println("Geben Sie die Anzahl Bits des Divisors an");
         size = scan.nextInt();
         int divisor[] = new int[size];
         //Bits des Divisors vom Benutzer erfassen
