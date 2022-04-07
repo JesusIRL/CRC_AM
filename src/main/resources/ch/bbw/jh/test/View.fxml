@@ -7,22 +7,61 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="226.0" prefWidth="639.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.bbw.jh.test.Controller">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="403.0" prefWidth="639.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.bbw.jh.test.Controller">
    <children>
       <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
-            <VBox prefHeight="200.0" prefWidth="100.0">
+            <VBox prefHeight="57.0" prefWidth="410.0">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Eingabe" />
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="CRC">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="144.0" prefWidth="332.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Eingabe" />
+                        <TextArea fx:id="input" prefHeight="200.0" prefWidth="200.0" text="asdfasdf" />
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="37.0" prefWidth="332.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ausgabe" />
+                        <TextArea fx:id="whatsgoingon" prefHeight="200.0" prefWidth="200.0" />
+                     </children>
+                  </HBox>
+                <Button mnemonicParsing="false" onAction="#clickCRC" text="Calc CRC" />
                </children>
             </VBox>
-            <TextArea fx:id="input" prefHeight="200.0" prefWidth="200.0" text="asdfasdf" />
+            <VBox prefHeight="57.0" prefWidth="385.0">
+               <children>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Hamming Code">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0" />
+                  <HBox prefHeight="100.0" prefWidth="200.0" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <HBox prefHeight="111.0" prefWidth="639.0">
+         <children>
+            <VBox prefHeight="200.0" prefWidth="100.0" />
             <VBox prefHeight="85.0" prefWidth="59.0">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ausgabe" />
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Anderungsposition 0 für gar nichts" />
                </children>
             </VBox>
@@ -35,12 +74,10 @@
             <CheckBox fx:id="cbx" mnemonicParsing="false" text="Korrekt?" />
          </children>
       </HBox>
-      <ButtonBar prefHeight="156.0" prefWidth="639.0">
+      <ButtonBar prefHeight="165.0" prefWidth="639.0">
         <buttons>
-            <TextArea fx:id="whatsgoingon" prefHeight="200.0" prefWidth="200.0" />
             <Button mnemonicParsing="false" onAction="#Initialize" text="reset" />
             <Button mnemonicParsing="false" onAction="#clickHamming" text="Calc Hamming Code" />
-          <Button mnemonicParsing="false" onAction="#clickCRC" text="Calc CRC" />
         </buttons>
       </ButtonBar>
    </children>

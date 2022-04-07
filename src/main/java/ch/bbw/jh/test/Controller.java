@@ -180,7 +180,6 @@ public class Controller  {
 
             returnData[((int) Math.pow(2, i)) - 1] = getParityBit(returnData, i);
         }
-        myModel.setWhatsgoingon(myModel.getWhatsgoingon()+" Paritätbits:"+parityBits+"\n");
         return returnData;
     }
 
