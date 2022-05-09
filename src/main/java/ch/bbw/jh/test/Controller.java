@@ -1,37 +1,52 @@
 package ch.bbw.jh.test;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.text.Text;
+
 import java.io.*;
 import java.text.BreakIterator;
 import java.util.Scanner;
+
 /**
+ * Controller
  * @author Jorin Heer, Aron Gassner
  * @version 2022
  */
+
 public class Controller  {
 
-
     private Model myModel;
+    private HammingCode hammingCode = new HammingCode();
     @FXML
     private TextArea input;
     @FXML
+    private TextArea hammingInput;
+    @FXML
     private TextField output;
+    @FXML
+    private TextArea hammingOutput;
     @FXML
     private TextField aenderungspos;
     @FXML
     private TextArea whatsgoingon;
     @FXML
     private CheckBox cbx;
+    @FXML
+    private Button auswahl1;
+    @FXML
+    private Button auswahl2;
+    @FXML
+    private Button auswahl3;
 
     public void setModel(Model myModel) {
         this.myModel = myModel;
         myModel.setInput("");
         myModel.setOutput("");
         myModel.setWhatsgoingon("");
+        myModel.setHammingInput("");
+        myModel.setHammingOutput("");
+
     }
     @FXML
     private void Initialize(){
@@ -98,24 +113,80 @@ public class Controller  {
             System.out.println("fehler");
         }
     }
+
     @FXML
-    public void clickHamming()throws IOException  {
-        myModel.setWhatsgoingon("");
-        myModel.setInput(input.getText());
-        String s1 = myModel.getInput();
-        myModel.setWhatsgoingon(myModel.getWhatsgoingon()+"Original: "+ s1+"\n");
+    public void auswahl1()throws IOException  {
+        myModel.setHammingInput("");
+        myModel.setHammingOutput("");
+        hammingCode.setFinalStr("");
+        myModel.setHammingInput(hammingInput.getText());
+        String s1 = myModel.getHammingInput();
         //Dateneingabe in Bytes umwandeln
         byte[] bytes = s1.getBytes("UTF-8");
         //Bytes als Binary String umwandeln
         String binaryString = convertToBinaryString(bytes);
-        myModel.setWhatsgoingon(myModel.getWhatsgoingon()+"Original: "+ binaryString+"\n");
+        System.out.println("binaryString"+binaryString);
+        hammingCode.autoHammingCode(binaryString);
+        myModel.setHammingOutput(myModel.getHammingOutput()+"Ihre Eingabe: " + s1 + "\n");
+        //Dateneingabe in Bytes umwandeln
+        myModel.setHammingOutput(myModel.getHammingOutput()+"verwandelt zu binär: " + binaryString + "\n");
+        myModel.setHammingOutput(myModel.getHammingOutput()+"Hamming Code: " + hammingCode.getFinalStr() + "\n");
+        hammingOutput.setText(myModel.getHammingOutput() + "\n");
+    }
+
+
+    @FXML
+    public void auswahl2()throws IOException  {
+        myModel.setHammingInput("");
+        myModel.setHammingOutput("");
+        hammingCode.setFinalStr("");
+        hammingCode.setN(15);
+        hammingCode.setn(11);
+        clickHamming();
+    }
+
+    @FXML
+    public void auswahl3()throws IOException  {
+        myModel.setHammingInput("");
+        myModel.setHammingOutput("");
+        hammingCode.setFinalStr("");
+        hammingCode.setN(63);
+        hammingCode.setn(57);
+        clickHamming();
+    }
+
+    public void clickHamming()throws IOException  {
+        myModel.setHammingInput(hammingInput.getText());
+        String s1 = myModel.getHammingInput();
+        myModel.setHammingOutput(myModel.getHammingOutput()+"Ihre Eingabe: " + s1 + "\n");
+        //Dateneingabe in Bytes umwandeln
+        byte[] bytes = s1.getBytes("UTF-8");
+        //Bytes als Binary String umwandeln
+        String binaryString = convertToBinaryString(bytes);
+        hammingCode.hammingCode(binaryString);
+        myModel.setHammingOutput(myModel.getHammingOutput()+"verwandelt zu binär: " + hammingCode.getNoParity() + "\n");
+        myModel.setHammingOutput(myModel.getHammingOutput()+"Hamming Code: " + hammingCode.getFinalStr() + "\n");
+        hammingOutput.setText(myModel.getHammingOutput() + "\n");
+    }
+
+    @FXML
+    public void clickHammingg()throws IOException  {
+        myModel.setWhatsgoingon("");
+        myModel.setInput(input.getText());
+        String s1 = myModel.getInput();
+        myModel.setWhatsgoingon("Original: "+ s1+"\n");
+        //Dateneingabe in Bytes umwandeln
+        byte[] bytes = s1.getBytes("UTF-8");
+        //Bytes als Binary String umwandeln
+        String binaryString = convertToBinaryString(bytes);
+        myModel.setWhatsgoingon("ahhahahaha");
+        myModel.setWhatsgoingon("Original: "+ binaryString+"\n");
 
         //Daten Array erstellen mit Grösse des Binary String
         int size = binaryString.length();
         // declare variables and array
         int hammingCodeSize, errorPosition;
         int hammingCode[];
-        // create scanner class object to take input from user
 
         // initialize array
         int arr[] = new int[size];

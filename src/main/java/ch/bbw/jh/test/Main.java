@@ -1,8 +1,4 @@
 package ch.bbw.jh.test;
-/**
- * @Autor Jorin Heer
- * @Version 16.09.2020
- */
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -10,10 +6,11 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+
 /**
- * Palindrom
- * @author Jorin Heer
- * @version 2020
+ * Main
+ * @author Jorin Heer, Aron Gassner
+ * @version 2022
  */
 
 public class Main extends Application {
