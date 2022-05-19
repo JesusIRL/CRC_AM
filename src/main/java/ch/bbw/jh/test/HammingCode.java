@@ -9,9 +9,12 @@ package ch.bbw.jh.test;
 
 public class HammingCode {
 
+    private static int finalLoc;
+    private static String after = "";
     private String finalStr = null;
     private int N;
     private int n;
+    private int r;
     private String noParity;
 
     /**
@@ -77,7 +80,7 @@ public class HammingCode {
 
         // input message
         int N = str.length();
-        int r = 1;
+        r = 1;
 
         while (Math.pow(2, r) < (N + r + 1)) {
             // r is number of redundant bits
@@ -102,7 +105,7 @@ public class HammingCode {
      */
     public void hammingCode(String str) {
 
-        int r = N - n;
+        r = N - n;
         int O;
 
         if (str.length() > str.length() / n * n) {
@@ -152,6 +155,71 @@ public class HammingCode {
         System.out.println(finalStr);
     }
 
+    static void receiveData(int data[], int parityBits) {
+
+        // declare variable pow, which we use to get the correct bits to check for parity.
+        int pow;
+        int size = data.length;
+        // declare parityArray to store the value of parity check
+        int parityArray[] = new int[parityBits];
+        // we use errorLoc string for storing the integer value of the error location.
+        String errorLoc = new String();
+        // use for loop to check the parities
+        for(pow = 0; pow < parityBits; pow++) {
+            // use for loop to extract the bit from 2^(power)
+            for(int i = 0; i < size; i++) {
+                int j = i + 1;
+                // convert the value of j into binary
+                String str = Integer.toBinaryString(j);
+                // find bit by using str
+                int bit = ((Integer.parseInt(str)) / ((int) Math.pow(10, pow))) % 10;
+                if(bit == 1) {
+                    if(data[i] == 1) {
+                        parityArray[pow] = (parityArray[pow] + 1) % 2;
+                    }
+                }
+            }
+            errorLoc = parityArray[pow] + errorLoc;
+        }
+        // This gives us the parity check equation values.
+        // Using these values, we will now check if there is a single bit error and then correct it.
+        // errorLoc provides parity check eq. values which we use to check whether a single bit error is there or not
+        // if present, we correct it
+        finalLoc = Integer.parseInt(errorLoc, 2);
+        // check whether the finalLoc value is 0 or not
+        if(finalLoc != 0) {
+            after = "Fehler wurde gefunden bei Position " + finalLoc + "." + "\n";
+            data[finalLoc - 1] = (data[finalLoc - 1] + 1) % 2;
+            after = after + "Nach dem Korrigieren des Fehlers ist das Codewort jetzt:" + "\n";
+            for(int i = 0; i < size; i++) {
+                after = after + data[size - i - 1] ;
+            }
+            after = after + "\n";
+        }
+
+        else {
+            after = after + "Es wurde kein Fehler gefunden." + "\n";
+        }
+        // print the original data
+        after = after + "Die Originalnachricht vom Sender:" + "\n";
+        pow = parityBits - 1;
+        for(int k = size; k > 0; k--) {
+            if(Math.pow(2, pow) != k) {
+                after = after + data[k - 1];
+            }
+            else {
+                // decrement value of pow
+                pow--;
+            }
+        }
+        after = after + "\n";
+
+    }
+
+    public int getFinalLoc() {
+        return finalLoc;
+    }
+
     public void setN(int N) {
         this.N = N;
     }
@@ -159,6 +227,10 @@ public class HammingCode {
     public void setn(int n) {
         this.n = n;
         System.out.println(n + "");
+    }
+
+    public int getR() {
+        return r;
     }
 
     public void setFinalStr(String finalStr) {
@@ -171,5 +243,9 @@ public class HammingCode {
 
     public String getNoParity() {
         return noParity;
+    }
+
+    public String getAfter() {
+        return after;
     }
 }

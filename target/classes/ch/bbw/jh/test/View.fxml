@@ -27,22 +27,22 @@
                   <HBox prefHeight="144.0" prefWidth="332.0">
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Eingabe" />
-                        <TextArea prefHeight="200.0" prefWidth="200.0" />
-                     </children>
-                     <VBox.margin>
-                        <Insets left="10.0" />
-                     </VBox.margin>
-                  </HBox>
-                  <HBox prefHeight="37.0" prefWidth="332.0">
-                     <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ausgabe" />
-                        <TextArea prefHeight="200.0" prefWidth="200.0" />
+                        <TextArea fx:id="input" />
                      </children>
                      <VBox.margin>
                         <Insets left="10.0" />
                      </VBox.margin>
                   </HBox>
                 <Button alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#clickCRC" text="Enter" />
+                  <HBox VBox.vgrow="ALWAYS">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ausgabe" />
+                        <TextArea fx:id="whatsgoingon" />
+                     </children>
+                     <VBox.margin>
+                        <Insets left="10.0" />
+                     </VBox.margin>
+                  </HBox>
                </children>
             </VBox>
             <VBox prefHeight="57.0" prefWidth="385.0" HBox.hgrow="ALWAYS">
@@ -58,7 +58,7 @@
                   <HBox prefHeight="144.0" prefWidth="332.0">
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Eingabe" />
-                        <TextArea fx:id="hammingInput" prefHeight="200.0" prefWidth="200.0" />
+                        <TextArea fx:id="hammingInput" />
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
@@ -66,10 +66,12 @@
                         <Button fx:id="auswahl1" mnemonicParsing="false" onAction="#auswahl1" text="Automatisch" />
                         <Button fx:id="auswahl2" mnemonicParsing="false" onAction="#auswahl2" text="(15,11)" />
                         <Button fx:id="auswahl3" mnemonicParsing="false" onAction="#auswahl3" text="(63, 57)" />
+                        <Button fx:id="decode" mnemonicParsing="false" onAction="#clickReceiveHamming" text="Entschlüsseln" />
                      </children>
                   </HBox>
                   <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                      <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ausgabe" />
                         <TextArea fx:id="hammingOutput" HBox.hgrow="ALWAYS" />
                      </children>
                      <VBox.margin>
@@ -86,20 +88,9 @@
       <HBox prefHeight="111.0" prefWidth="639.0">
          <children>
             <VBox prefHeight="200.0" prefWidth="100.0" />
-            <VBox prefHeight="85.0" prefWidth="59.0">
-               <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Anderungsposition 0 für gar nichts" />
-               </children>
-            </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0">
-               <children>
-                  <TextField fx:id="output" prefHeight="25.0" prefWidth="217.0" />
-                  <TextField fx:id="aenderungspos" prefHeight="0.0" prefWidth="199.0" text="0" />
-               </children>
-            </VBox>
+            <TextField fx:id="output" prefHeight="25.0" prefWidth="166.0" />
             <CheckBox fx:id="cbx" mnemonicParsing="false" text="Korrekt?" />
          </children>
       </HBox>
-      <Button alignment="BOTTOM_LEFT" mnemonicParsing="false" onAction="#Initialize" text="reset" />
    </children>
 </VBox>
